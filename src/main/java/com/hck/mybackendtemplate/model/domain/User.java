@@ -32,7 +32,7 @@ public class User implements Serializable {
     /**
      * 头像
      */
-    private String avatarUrl;
+    private String userAvatar;
 
     /**
      * 性别
