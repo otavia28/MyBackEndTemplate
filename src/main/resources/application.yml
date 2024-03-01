@@ -14,6 +14,8 @@ spring:
 # 端口号
 server:
   port: 8080
+  servlet:
+    context-path: /api
 # 关闭 MyBatis-Plus 默认将驼峰转换为下划线
 mybatis-plus:
   configuration:
