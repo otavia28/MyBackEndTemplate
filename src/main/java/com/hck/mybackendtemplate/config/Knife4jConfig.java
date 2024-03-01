@@ -33,7 +33,7 @@ public class Knife4jConfig {
                         .version("1.0")
                         .build())
                 .select()
-                // 指定 Controller 扫描包路径
+                // 设置 Controller 扫描包路径
                 .apis(RequestHandlerSelectors.basePackage("com.hck.mybackendtemplate.controller"))
                 .paths(PathSelectors.any())
                 .build();
