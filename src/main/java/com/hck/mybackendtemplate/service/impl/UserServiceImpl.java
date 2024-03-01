@@ -164,7 +164,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 把用户密码、用户更新时间、用户账户是否删除脱敏掉
         safetyUser.setId(originUser.getId());
-        safetyUser.setUsername(originUser.getUsername());
+        safetyUser.setUserName(originUser.getUserName());
         safetyUser.setUserAccount(originUser.getUserAccount());
         safetyUser.setAvatarUrl(originUser.getAvatarUrl());
         safetyUser.setGender(originUser.getGender());
