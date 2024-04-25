@@ -243,4 +243,18 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    @GetMapping("/list")
+    private BaseResponse<List<User>> listUsers(HttpServletRequest request){
+        // 仅管理员可查询
+        if (!userService.isAdmin(request)) {
+            throw  new BusinessException(ErrorCode.NO_AUTH);
+        }
+        List<User> list = userService.list();
+        // 用户信息脱敏
+        List<User> safetyList = list.stream().map(user -> {
+            return userService.getSafetyUser(user);
+        }).collect(Collectors.toList());
+        return ResultUtils.success(safetyList);
+    }
+
 }
