@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.hck.mybackendtemplate.Mapper")
+// @EnableScheduling
 public class MyBackEndTemplateApplication {
 
     public static void main(String[] args) {
