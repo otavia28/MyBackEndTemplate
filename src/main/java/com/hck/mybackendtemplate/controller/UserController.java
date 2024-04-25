@@ -243,6 +243,11 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 返回用户信息列表
+     * @param request 请求
+     * @return 用户信息列表
+     */
     @GetMapping("/list")
     private BaseResponse<List<User>> listUsers(HttpServletRequest request){
         // 仅管理员可查询
