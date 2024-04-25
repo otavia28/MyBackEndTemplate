@@ -1,8 +1,36 @@
-# 应用服务 WEB 访问端口
-server.port=8080
-#下面这些内容是为了让MyBatis映射
-#指定Mybatis的Mapper文件
-mybatis.mapper-locations=classpath:mappers/*xml
-#指定Mybatis的实体目录
-mybatis.type-aliases-package=com.hck.mybackendtemplate.mybatis.entity
-
+spring:
+  # 项目名
+  application:
+    name: MyBackEndTemplate
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/MyBackEndTemplate
+    username: root
+    password: 20010128
+  # session 失效时间为 1 天
+  session:
+    timeout: 86400
+    store-type: redis
+  # Redis 设置
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+# 端口号
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+    session:
+      cookie:
+        domain: localhost
+# 关闭 MyBatis-Plus 默认将驼峰转换为下划线
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
