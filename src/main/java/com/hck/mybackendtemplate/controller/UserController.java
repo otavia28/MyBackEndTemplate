@@ -74,11 +74,11 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
-        RLock lock = redissonClient.getLock("flowerpot:user:login:lock");
+        RLock lock = redissonClient.getLock("mybackendtemplate:user:login:lock");
         try {
             //只有1个线程能获取锁
             if (lock.tryLock(0,30000L, TimeUnit.MILLISECONDS)) {
-                String redisKey = String.format("flowerpot:user:login:%s", userAccount);
+                String redisKey = String.format("mybackendtemplate:user:login:%s", userAccount);
                 // 尝试从 redis 中获取用户信息
                 User cachedUser = (User) redisTemplate.opsForValue().get(redisKey);
                 if (cachedUser != null) {
@@ -117,7 +117,7 @@ public class UserController {
      * @param request 请求
      * @return 用户列表
      */
-    @GetMapping("/search/{username}")
+    @GetMapping("/search")
     public BaseResponse<List<User>> searchUsers(String userName, HttpServletRequest request) {
         // 判断是否为管理员
         if (!userService.isAdmin(request)) {
@@ -138,7 +138,7 @@ public class UserController {
      * @param request 请求
      * @return 是否删除成功
      */
-    @PostMapping("/delete/{id}")
+    @PostMapping("/delete")
     public BaseResponse<Boolean> deleteUser(@RequestBody long id, HttpServletRequest request) {
         // 判断是否为管理员
         if (!userService.isAdmin(request)) {
@@ -190,7 +190,7 @@ public class UserController {
      * @param request 请求
      * @return 修改是否成功
      */
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     public BaseResponse<Boolean> updateUser(@PathVariable long id, @RequestBody User user, HttpServletRequest request) {
         //仅管理员可修改
         if (!userService.isAdmin(request)) {

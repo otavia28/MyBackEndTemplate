@@ -1,7 +1,7 @@
 show databases;
 
-create database MyBackEndTemplate;
-use MyBackEndTemplate;
+create database 数据库名;
+use 数据库名;
 
 # 用户表 user
 DROP TABLE IF EXISTS `user`;
