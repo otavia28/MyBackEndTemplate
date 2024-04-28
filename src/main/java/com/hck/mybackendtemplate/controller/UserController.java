@@ -43,10 +43,12 @@ public class UserController {
     @Resource
     private RedissonClient redissonClient;
 
+    private int isBloomEmpty = 1;
+
     // 在类中定义一个布隆过滤器
     private BloomFilter<String> bloomFilter = BloomFilter.create(
             Funnels.stringFunnel(StandardCharsets.UTF_8),
-            10000, // 预计存放的最大元素数量
+            1000000, // 预计存放的最大元素数量
             0.01); // 误判率
 
     /**
@@ -56,6 +58,13 @@ public class UserController {
      */
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
+        // 先把数据库中的 userAccount put 进布隆过滤器
+        if (isBloomEmpty == 1) {
+            List<User> userList = userService.list();
+            for (User safetyUser : userList) {
+                bloomFilter.put(safetyUser.getUserAccount());
+            }
+        }
         if (userRegisterRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -81,6 +90,13 @@ public class UserController {
      */
     @PostMapping("/login")
     public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        // 先把数据库中的 userAccount put 进布隆过滤器
+        if (isBloomEmpty == 1) {
+            List<User> userList = userService.list();
+            for (User safetyUser : userList) {
+                bloomFilter.put(safetyUser.getUserAccount());
+            }
+        }
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
@@ -293,7 +309,7 @@ public class UserController {
     private BaseResponse<List<User>> listUsers(HttpServletRequest request){
         // 仅管理员可查询
         if (!userService.isAdmin(request)) {
-            throw  new BusinessException(ErrorCode.NO_AUTH);
+            throw new BusinessException(ErrorCode.NO_AUTH);
         }
         List<User> list = userService.list();
         // 用户信息脱敏
