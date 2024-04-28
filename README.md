@@ -27,6 +27,7 @@
 - spring-session-data-redis
 - spring-data-redis 2.6.4
 - redisson 3.28.0
+- guava 32.1.2-jre
 
 # 插件
 - MyBatisX：自动生成代码文件 

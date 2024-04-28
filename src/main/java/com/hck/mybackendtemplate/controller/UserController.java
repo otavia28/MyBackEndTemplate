@@ -17,10 +17,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.Random;
+
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
 
 import static com.hck.mybackendtemplate.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -36,6 +42,12 @@ public class UserController {
 
     @Resource
     private RedissonClient redissonClient;
+
+    // 在类中定义一个布隆过滤器
+    private BloomFilter<String> bloomFilter = BloomFilter.create(
+            Funnels.stringFunnel(StandardCharsets.UTF_8),
+            10000, // 预计存放的最大元素数量
+            0.01); // 误判率
 
     /**
      * 用户注册请求
@@ -54,6 +66,10 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         long result = userService.userRegister(userAccount, userPassword, checkPassword);
+
+        // 将注册成功的用户账号添加到布隆过滤器中
+        bloomFilter.put(userAccount);
+
         return ResultUtils.success(result);
     }
 
@@ -74,6 +90,11 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
+        // 使用布隆过滤器快速判断用户账号是否存在于系统中
+        if (!bloomFilter.mightContain(userAccount)) {
+            throw new BusinessException(ErrorCode.NOT_IN_BLOOM); // 用户账号不存在，返回请求参数错误
+        }
+
         RLock lock = redissonClient.getLock("mybackendtemplate:user:login:lock");
         try {
             //只有1个线程能获取锁
@@ -89,7 +110,11 @@ public class UserController {
                     User user = userService.userLogin(userAccount, userPassword, request);
                     if (user != null) {
                         // 将查询到的用户信息存入 Redis，设置过期时间
-                        redisTemplate.opsForValue().set(redisKey, user, Duration.ofMinutes(30)); // 假设设置30分钟过期
+                        Random random = new Random();
+                        int minSeconds = 1500;
+                        int maxSeconds = 1800;
+                        int randomSeconds = random.nextInt(maxSeconds - minSeconds + 1) + minSeconds;
+                        redisTemplate.opsForValue().set(redisKey, user, Duration.ofSeconds(randomSeconds)); // 设置随机过期时间
                         return ResultUtils.success(user);
                     } else {
                         throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -200,6 +225,12 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         boolean b = userService.updateById(user);
+
+        // 如果布隆过滤器中不存在该用户账号，添加
+        if (!bloomFilter.mightContain(user.getUserAccount())) {
+            bloomFilter.put(user.getUserAccount());
+        }
+
         return ResultUtils.success(b);
     }
 
@@ -221,6 +252,12 @@ public class UserController {
         }
         user.setId(id);
         boolean b = userService.updateById(user);
+
+        // 如果布隆过滤器中不存在该用户账号，添加
+        if (!bloomFilter.mightContain(user.getUserAccount())) {
+            bloomFilter.put(user.getUserAccount());
+        }
+
         return ResultUtils.success(true);
     }
 
@@ -240,6 +277,10 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         long result = userService.userAdd(user);
+
+        // 将添加成功的用户账号添加到布隆过滤器中
+        bloomFilter.put(user.getUserAccount());
+
         return ResultUtils.success(result);
     }
 
