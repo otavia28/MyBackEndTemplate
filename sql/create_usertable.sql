@@ -7,11 +7,11 @@ use 数据库名;
 DROP TABLE IF EXISTS `user`;
 create table user
 (
-    id           bigint auto_increment comment 'id' primary key,
+    user_id       bigint auto_increment comment 'id' primary key,
     user_name     varchar(256)              null comment '昵称',
     user_account  varchar(256)              null comment '账号',
-    user_avatar    varchar(1024)             null comment '头像',
-    gender       tinyint                   null comment '性别', -- 女为 0，男为 1，未知为 2
+    user_avatar   varchar(1024)             null comment '头像',
+    gender         tinyint                   null comment '性别', -- 女为 0，男为 1，未知为 2
     user_password varchar(512)              not null comment '密码',
     phone        varchar(128)              null comment '电话',
     email        varchar(512)              null comment '邮箱',
