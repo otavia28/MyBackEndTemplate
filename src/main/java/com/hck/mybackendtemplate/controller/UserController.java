@@ -146,7 +146,7 @@ public class UserController {
         } finally {
             // 只能释放自己的锁
             if (lock.isHeldByCurrentThread()) {
-                System.out.println("unLock: " + Thread.currentThread().getId());
+                System.out.println("unLock: " + Thread.currentThread().getUserId());
                 lock.unlock();
             }
         }
@@ -204,7 +204,7 @@ public class UserController {
         if (currentUser == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN);
         }
-        long userId = currentUser.getId();
+        long userId = currentUser.getUserId();
         User user = userService.getById(userId);
         User safeUser = userService.getSafetyUser(user);
         return ResultUtils.success(safeUser);
@@ -262,11 +262,11 @@ public class UserController {
         if (loginUser == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN);
         }
-        Long id = loginUser.getId();
+        Long id = loginUser.getUserId();
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        user.setId(id);
+        user.setUserId(id);
         boolean b = userService.updateById(user);
 
         // 如果布隆过滤器中不存在该用户账号，添加
