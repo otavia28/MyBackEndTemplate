@@ -70,7 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 账号不能重复，由于这一步需要查询数据库，因此放到最后一次校验，节省资源占用
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();     // QueryWrapper 是用于封装查询条件的工具类。
-        queryWrapper.eq("userAccount", userAccount);        // 借助查询工具类的 eq 方法添加查询条件。
+        queryWrapper.eq("user_account", userAccount);        // 借助查询工具类的 eq 方法添加查询条件。
         long count = userMapper.selectCount(queryWrapper);          // userMapper 的 selectCount 方法表示按照该对象中指定的条件进行查询。
         if (count > 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
@@ -126,8 +126,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userAccount", userAccount);
-        queryWrapper.eq("userPassword", encryptPassword);
+        queryWrapper.eq("user_account", userAccount);
+        queryWrapper.eq("user_password", encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
         // 用户不存在
         if (user == null) {
@@ -233,7 +233,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         // 账号不能重复
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();     // QueryWrapper 是用于封装查询条件的工具类。
-        queryWrapper.eq("userAccount", user.getUserAccount());        // 借助查询工具类的 eq 方法添加查询条件。
+        queryWrapper.eq("user_account", user.getUserAccount());        // 借助查询工具类的 eq 方法添加查询条件。
         long count = userMapper.selectCount(queryWrapper);          // userMapper 的 selectCount 方法表示按照该对象中指定的条件进行查询。
         if (count > 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
