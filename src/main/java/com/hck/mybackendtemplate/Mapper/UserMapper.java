@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-04-24 17:44:00
 * @Entity com.hck.mybackendtemplate.model.domain.User
 */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }
