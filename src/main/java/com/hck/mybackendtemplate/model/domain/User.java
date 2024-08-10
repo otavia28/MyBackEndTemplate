@@ -13,73 +13,86 @@ import lombok.Data;
 @TableName(value ="user")
 @Data
 public class User implements Serializable {
-    /**
-     * id
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 昵称
+     * 用户 id
      */
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Long userId;
+
+    /**
+     * 用户昵称
+     */
+    @TableField(value = "user_name")
     private String userName;
 
     /**
-     * 账号
+     * 用户账号
      */
+    @TableField(value = "user_account")
     private String userAccount;
 
     /**
-     * 头像
+     * 用户头像
      */
+    @TableField(value = "user_avatar")
     private String userAvatar;
 
     /**
      * 性别
      */
+    @TableField(value = "gender")
     private Integer gender;
 
     /**
-     * 密码
+     * 用户密码
      */
+    @TableField(value = "user_password")
     private String userPassword;
 
     /**
      * 电话
      */
+    @TableField(value = "phone")
     private String phone;
 
     /**
      * 邮箱
      */
+    @TableField(value = "email")
     private String email;
 
     /**
      * 用户状态
      */
+    @TableField(value = "user_status")
     private Integer userStatus;
 
     /**
      * 创建时间
      */
+    @TableField(value = "create_time")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @TableField(value = "update_time")
     private Date updateTime;
 
     /**
-     * 是否删除
+     * 用户是否删除
      */
-    @TableLogic
+    @TableField(value = "isDelete")
     private Integer isDelete;
 
     /**
      * 用户身份
      */
+    @TableField(value = "user_role")
     private Integer userRole;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }
