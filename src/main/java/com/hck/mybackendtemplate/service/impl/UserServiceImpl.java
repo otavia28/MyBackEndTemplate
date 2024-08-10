@@ -91,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (!saveResult) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "注册失败");
         }
-        return user.getId();
+        return user.getUserId();
     }
 
     /**
@@ -156,7 +156,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User safetyUser = new User();
 
         // 把用户密码、用户更新时间、用户账户是否删除脱敏掉
-        safetyUser.setId(originUser.getId());
+        safetyUser.setUserId(originUser.getUserId());
         safetyUser.setUserName(originUser.getUserName());
         safetyUser.setUserAccount(originUser.getUserAccount());
         safetyUser.setUserAvatar(originUser.getUserAvatar());
@@ -251,7 +251,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if(!saveResult){
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "注册失败");
         }
-        return user.getId();
+        return user.getUserId();
     }
 
     // /**
@@ -279,12 +279,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     //  */
     // @Override
     // public int updateUser(User user, User loginUser) {
-    //     long userId = user.getId();
+    //     long userId = user.getUserId();
     //     if (userId <= 0) {
     //         throw new BusinessException(ErrorCode.PARAMS_ERROR);
     //     }
     //     // 既不是管理员又想改别人的数据是不被允许的
-    //     if (!isAdmin(loginUser) && userId != loginUser.getId()) {
+    //     if (!isAdmin(loginUser) && userId != loginUser.getUserId()) {
     //         throw new BusinessException(ErrorCode.NO_AUTH);
     //     }
     //     User oldUser = userMapper.selectById(userId);
