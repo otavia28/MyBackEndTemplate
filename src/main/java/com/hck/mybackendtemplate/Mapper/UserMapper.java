@@ -2,6 +2,7 @@ package com.hck.mybackendtemplate.Mapper;
 
 import com.hck.mybackendtemplate.model.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author huchenkun
